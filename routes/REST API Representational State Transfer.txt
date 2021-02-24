@@ -1,0 +1,8 @@
+REST API Representational State Transfer
+
+Http Methods/Http Verbs
+GET-Retrieve resource from a server
+POST-Create new resource
+PUT-Update a resource
+PATCH-Modify an existing resource
+DELETE-Delete a resource

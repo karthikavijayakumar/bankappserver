@@ -1,0 +1,6 @@
+{
+    "UserName":"userone",
+    "password":"testuser".
+    "items":["item1","item2"]
+
+}

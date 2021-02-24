@@ -1,0 +1,9 @@
+const testPromise = new Promise((resove,reject)=>{
+    
+        resove("data");
+
+
+});
+
+testPromise.then(data=>{
+})
