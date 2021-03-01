@@ -37,18 +37,27 @@ router.get('/', function (req, res) {
 
 });
 
+router.get('/users',authMiddleware, function (req, res) {
+  bankService.getUsers()
+  .then(users => {
+    res.send(users);
+  })
+
+});
+
 router.post('/login', function (req, res, next) {
 
 
-  bankService.authenticateUser(req.body.UserName, req.body.password)
+  bankService.authenticateUser(req.body.username, req.body.password)
     .then(user => {
       if (user) {
         const token = jwt.sign({
           exp: Math.floor(Date.now() / 1000) + (60 * 60 * 5),
-          UserName: req.body.UserName
-        }, "secretkey#$&");
+          username: req.body.username,
+          _id:user._id
+        }, jwtSecret);
 
-        const decoded = jwt.verify(token, jwtSecret);
+        // const decoded = jwt.verify(token, jwtSecret);
 
 
         res.send({
@@ -69,14 +78,14 @@ router.post('/login', function (req, res, next) {
   
 });
 router.post('/deposit', authMiddleware, function (req, res) {
-  bankService.deposit(req.user.UserName, req.body.amount)
+  bankService.deposit(req.user._id, req.body.amount)
   .then(message => {
     res.send(message);
   });
 
 })
 router.post('/withdraw', authMiddleware, function (req, res) {
-  bankService.withdraw(req.user.UserName, req.body.amount)
+  bankService.withdraw(req.user._id, req.body.amount)
     .then(message => {
       res.send(message);
     });
@@ -87,7 +96,7 @@ router.post('/withdraw', authMiddleware, function (req, res) {
 
 router.get('/history', authMiddleware, function (req, res) {
 
-  bankService.getUser(req.user.UserName)
+  bankService.getUser(req.user._id)
   .then(user => {
     res.send(user.history);
   });
@@ -96,11 +105,24 @@ router.get('/history', authMiddleware, function (req, res) {
 });
 router.get('/profile', authMiddleware, function (req, res) {
 
-  bankService.getUser(req.user.username)
+  bankService.getUser(req.user._id)
   .then(user => {
-    res.send(user.profile);
+    res.send(user);
   });
  
 
 });
+
+router.patch("/profile",authMiddleware,function(req,res){
+  bankService.updateUser(req.user._id, req.body)
+  .then(user => {
+    res.send({message:"Profile Updated Successfully"});
+  });
+
+})
+router.patch("/enquiry/:id",function(req,res){
+  
+    res.send(req.params.id);
+  });
+
 module.exports = router;

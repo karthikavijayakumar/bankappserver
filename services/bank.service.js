@@ -17,11 +17,9 @@ const authenticateUser = (uname, pwd) => {
     })
     
 }
-const deposit = (UserName, amount) => {
+const deposit = (_id, amount) => {
    
-    return User.findOne({
-        username: UserName
-    })
+    return User.findById(_id)
         .then(user => {
 
             user.balance += amount;
@@ -39,10 +37,8 @@ const deposit = (UserName, amount) => {
         })
 }
 
-const withdraw = (UserName, amount) => {
-    return User.findOne({
-        username: UserName
-    })
+const withdraw = (_id, amount) => {
+    return User.findById(_id)
         .then(user => {
             if (user.balance < amount) {
                 return {
@@ -63,16 +59,22 @@ const withdraw = (UserName, amount) => {
             };
         })
 }
-const getUser = (UserName) => {
+const getUser = (_id) => {
    
-        return User.findOne({
-            username:UserName
-        });
+    return User.findById(_id)
 }
+const updateUser = function(_id,data){
+    return User.findOneAndUpdate({_id},data);
 
+}
+const getUsers = function(){
+    return User.find();
+}
 module.exports = {
     authenticateUser,
     deposit,
     withdraw,
-    getUser
+    getUser,
+    updateUser,
+    getUsers
 }
